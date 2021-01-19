@@ -34,9 +34,9 @@ class CheckTokenCreator:
             return None
 
 
-check = CheckTokenCreator(client=client, token_address=token_address)
-
-cr = check.creator_address
+# check = CheckTokenCreator(client=client, token_address=token_address)
+#
+# cr = check.creator_address
 
 
 class TokenCreator:
@@ -127,43 +127,20 @@ class TokenCreator:
 
 
 
-creator = TokenCreator(cr, client)
-
-#print(creator.get_info_about_creator_portfolio(json=True))
-
-print(creator.get_transactions_info(True))
-
-
-
-# r2 = client.get_token_history(token_address)
-# print(r2)
-# r3 = client.get_address_info(cr)
-# print(r3)
-
-
-                
-        
-
-"""
-
-
-
-
-
-
-
-
-
+# creator = TokenCreator(cr, client)
 #
-# r4 = client.get_token_price_history_grouped(token_address)
-# print(r4)
+# #print(creator.get_info_about_creator_portfolio(json=True))
 #
-# r4 = client.get_address_history(cr)
-# print(r4)
+# print(creator.get_transactions_info(True))
 
-#
-# txs = [r.get('hash') for r in r6]
-# #
-# # print(client.get_tx_info(txs[0]))
 
-"""
+class TokenInfo:
+    def __init__(self, token_address, client):
+        self.client = client
+        self.token_address = token_address
+        self.token_info = self.client.get_token_info(token_address)
+
+
+token_client = TokenInfo(token_address,client)
+
+print(token_client.token_info)
