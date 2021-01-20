@@ -53,12 +53,12 @@ class TokenCreator:
                 token_dct['symbol'] = token_info.get('symbol')
                 token_dct['name'] = token_info.get('name')
                 token_dct['totalSupply'] = token_info.get('totalSupply')
-                token_dct['balance'] = balance
+                token_dct['balance'] = float(balance)
                 try:
                     pct_of_supply = float(balance) / float(token_info.get('totalSupply'))
                 except ZeroDivisionError:
                     pct_of_supply = None
-                token_dct['pctOfTotalSupply'] = round(pct_of_supply, 50)
+                token_dct['pctOfTotalSupply'] = round(pct_of_supply, 8)
                 portfolio_items.append(token_dct)
             if dct_parse:
                 return portfolio_items
