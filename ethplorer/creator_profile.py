@@ -2,18 +2,18 @@ from ethplorer.client import EthplorerClient
 import json
 import pandas as pd
 from datetime import datetime
+from json import encoder
+encoder.FLOAT_REPR = lambda o: format(o, '.12f')
 
 with open('apikey.json') as f:
     api_key = json.load(f).get('api_key')
 from datetime import datetime
 
 
-# creator_address = "0x7c22958b42d0c5a45c32f3f097d1cf8ccce1d261"
-# #creator_address2 = "0x42358f60f71b3ceedb7f6d4b72c0b3fee2853761"
-# #token_address = "0xad0820827df41aa5e27b8b994db04837c0571540"
-
 
 token_address = "0x9CDA02B2a43F16f11C6860A8630672de9854D6F7"
+token_address = "0x9cda02b2a43f16f11c6860a8630672de9854d6f7"
+
 client = EthplorerClient(api_key)
 
 
@@ -34,10 +34,12 @@ class CheckTokenCreator:
             return None
 
 
-# check = CheckTokenCreator(client=client, token_address=token_address)
+check = CheckTokenCreator(client=client, token_address=token_address)
 #
-# cr = check.creator_address
+cr = check.creator_address
+print(cr)
 
+cr = "0xad0bfed28c522f7143a3e842ba1f552481d22b44"
 
 class TokenCreator:
     def __init__(self, creator_address, client):
@@ -58,7 +60,7 @@ class TokenCreator:
     def get_transactions_count(self):
         return self._creator_address_info.get('countTxs')
 
-    def get_info_about_creator_portfolio(self, json=False):
+    def get_info_about_creator_portfolio(self, dct_parse=False):
         portfolio_items = []
         portfolio = self._creator_address_info.get('tokens')
         if portfolio:
@@ -70,19 +72,19 @@ class TokenCreator:
                 token_dct['symbol'] = token_info.get('symbol')
                 token_dct['name'] = token_info.get('name')
                 token_dct['totalSupply'] = token_info.get('totalSupply')
-                token_dct['balance'] = round(balance,2)
+                token_dct['balance'] = balance
                 try:
-                    pct_of_supply = int(balance) / int(token_info.get('totalSupply'))
+                    pct_of_supply = float(balance) / float(token_info.get('totalSupply'))
                 except ZeroDivisionError:
                     pct_of_supply = None
-                token_dct['pctOfTotalSupply'] = round(pct_of_supply, 4)
+                token_dct['pctOfTotalSupply'] = round(pct_of_supply, 50)
                 portfolio_items.append(token_dct)
-            if json:
+            if dct_parse:
                 return portfolio_items
             else:
                 return pd.DataFrame(portfolio_items)
 
-    def get_transactions_info(self, json=False):
+    def get_transactions_info(self, dct_parse=False):
         transactions = []
         operations = self._creator_address_history.get('operations')
         if operations:
@@ -114,33 +116,28 @@ class TokenCreator:
                 operation_dct['totalSupply'] = token_info.get('totalSupply')
 
                 try:
-                    transferred_pct = round(int(operation.get('value')) / int(token_info.get('totalSupply')),8)
+                    transferred_pct = round(float(operation.get('value')) / float(token_info.get('totalSupply')),8)
                 except ZeroDivisionError:
                     transferred_pct = None
 
                 operation_dct['transferredPctOfTotalSupply'] = transferred_pct
                 transactions.append(operation_dct)
-            if json:
+            if dct_parse:
                 return transactions
             else:
                 return pd.DataFrame(transactions)
 
 
 
-# creator = TokenCreator(cr, client)
+creator = TokenCreator(cr, client)
+print(creator.get_info_about_creator_portfolio(True))
+print(creator.get_transactions_info(True))
+
+
+
+# token_client = TokenInfo(token_address,client)
 #
-# #print(creator.get_info_about_creator_portfolio(json=True))
-#
-# print(creator.get_transactions_info(True))
+# print(token_client.token_info)
 
 
-class TokenInfo:
-    def __init__(self, token_address, client):
-        self.client = client
-        self.token_address = token_address
-        self.token_info = self.client.get_token_info(token_address)
-
-
-token_client = TokenInfo(token_address,client)
-
-print(token_client.token_info)
+print(client.get_address_history(cr))

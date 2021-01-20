@@ -30,12 +30,12 @@ class EthplorerClient:
         return resp
 
     def get_token_history(self, address):
-        url = f"https://api.ethplorer.io/getTokenHistory/{address}{self.api_query}"
+        url = f"https://api.ethplorer.io/getTokenHistory/{address}{self.api_query}&limit=1000"
         resp = self._request_call(url)
         return resp
 
     def get_address_history(self, address):
-        url = f"https://api.ethplorer.io/getAddressHistory/{address}{self.api_query}"
+        url = f"https://api.ethplorer.io/getAddressHistory/{address}{self.api_query}&limit=1000"
         resp = self._request_call(url)
         return resp
 
