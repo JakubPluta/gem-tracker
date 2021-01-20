@@ -1,5 +1,7 @@
 from pycoingecko import CoinGeckoAPI
 import re
+import nltk
+
 
 cg = CoinGeckoAPI()
 
@@ -11,7 +13,7 @@ token_name = "TOM"
 
 def find_similar_coins_on_coingecko(token_name):
     list_of_tokens = cg.get_coins_list()
-    simmilar = [token for token in list_of_tokens if re.match(r"^tom.?", token["symbol"], flags=re.IGNORECASE)]
+    simmilar = [token for token in list_of_tokens if re.match(fr"^{token_name}.?", token["symbol"], flags=re.IGNORECASE)]
     return simmilar
 
 
@@ -33,10 +35,8 @@ def get_similar_tokens_data(list_of_similar_tokens):
             "contract_address": coin.get("contract_address"),
         }
         coins.append(coin_dct)
+
     return coins
 
 x = get_similar_tokens_data(lisst)
-print(x)
 
-r = cg.get_status_updates(category="new_listings")
-print(r)

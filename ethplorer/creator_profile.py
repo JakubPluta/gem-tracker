@@ -5,21 +5,9 @@ from datetime import datetime
 from json import encoder
 encoder.FLOAT_REPR = lambda o: format(o, '.12f')
 
-with open('apikey.json') as f:
-    api_key = json.load(f).get('api_key')
-from datetime import datetime
-
-
-
-token_address = "0x9CDA02B2a43F16f11C6860A8630672de9854D6F7"
-token_address = "0x9cda02b2a43f16f11c6860a8630672de9854d6f7"
-
-client = EthplorerClient(api_key)
-
-
 
 class CheckTokenCreator:
-    def __init__(self, client, token_address: str):
+    def __init__(self, token_address: str, client):
         self.client = client
         self.token_address = token_address
         self.token_info = client.get_address_info(token_address)
@@ -34,13 +22,6 @@ class CheckTokenCreator:
             return None
 
 
-check = CheckTokenCreator(client=client, token_address=token_address)
-#
-cr = check.creator_address
-print(cr)
-
-cr = "0xad0bfed28c522f7143a3e842ba1f552481d22b44"
-
 class TokenCreator:
     def __init__(self, creator_address, client):
         self.creator_address = creator_address
@@ -52,7 +33,7 @@ class TokenCreator:
         if eth:
             eth_balance = eth.get("balance")
             eth_current_price = eth.get("price").get("rate")
-            usd_balance_value = round(int(eth_balance) * int(eth_current_price), 4)
+            usd_balance_value = round(float(eth_balance) * float(eth_current_price), 8)
             return {"ethBalance" : eth.get("balance"),"ethPrice" : eth.get("price").get("rate"), "usdBalance" : usd_balance_value}
         else:
             return None
@@ -126,18 +107,3 @@ class TokenCreator:
                 return transactions
             else:
                 return pd.DataFrame(transactions)
-
-
-
-creator = TokenCreator(cr, client)
-print(creator.get_info_about_creator_portfolio(True))
-print(creator.get_transactions_info(True))
-
-
-
-# token_client = TokenInfo(token_address,client)
-#
-# print(token_client.token_info)
-
-
-print(client.get_address_history(cr))

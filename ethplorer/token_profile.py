@@ -2,17 +2,6 @@ from ethplorer.client import EthplorerClient
 import json
 import pandas as pd
 from datetime import datetime
-from json import encoder
-
-
-with open('apikey.json') as f:
-    api_key = json.load(f).get('api_key')
-
-
-token_address = "0x9cda02b2a43f16f11c6860a8630672de9854d6f7"
-
-
-client = EthplorerClient(api_key)
 
 
 class TokenInfo:
@@ -53,7 +42,7 @@ class TokenInfo:
                 return pd.DataFrame(transactions)
 
     def get_token_holders(self, dct_parse=False):
-        token_holders = self.client.get_top_token_holders(token_address)
+        token_holders = self.client.get_top_token_holders(self.token_address)
         if token_holders:
             holders = token_holders.get('holders')
             if dct_parse:
@@ -81,20 +70,4 @@ class TokenInfo:
             "countTransfersFrom": top_transferred_from.values[0]
         }
 
-
-Token = TokenInfo(token_address, client)
-
-
-print(Token.get_token_holders(True))
-
-
-
-
-# print(info)
-# print()
-# print("-------------------------------------------------")
-# print("--------------------Token Info-------------------")
-#
-# for key, val in info.items():
-#     print(f"# {key}:", (" " * (20 - (len(key)))),f"{val}")
 
