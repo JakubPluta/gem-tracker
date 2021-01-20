@@ -73,7 +73,7 @@ class TokenCreator:
                 operation_dct = {}
                 token_info = operation.get('tokenInfo')
 
-                operation_dct['timestamp'] = operation.get('timestamp')
+                #operation_dct['timestamp'] = operation.get('timestamp')
 
                 try:
                     operation_dct['datetime'] = datetime.fromtimestamp(operation.get('timestamp'))
@@ -97,11 +97,11 @@ class TokenCreator:
                 operation_dct['totalSupply'] = token_info.get('totalSupply')
 
                 try:
-                    transferred_pct = round(float(operation.get('value')) / float(token_info.get('totalSupply')),8)
+                    transferred_pct = round(float(operation.get('value')) / float(token_info.get('totalSupply')),6)
                 except ZeroDivisionError:
                     transferred_pct = None
 
-                operation_dct['transferredPctOfTotalSupply'] = transferred_pct
+                operation_dct['transferredPct'] = transferred_pct
                 transactions.append(operation_dct)
             if dct_parse:
                 return transactions

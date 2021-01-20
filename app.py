@@ -11,7 +11,11 @@ with open('ethplorer/apikey.json') as f:
     api_key = json.load(f).get('api_key')
 
 
-def generate(token_address):
+def generate(token_address, api_key):
+    if not api_key:
+        raise ValueError("Api key missing")
+
+
     client = EthplorerClient(api_key)
     token = TokenInfo(token_address, client)
 
@@ -81,3 +85,4 @@ def generate(token_address):
     print(tab3)
 
 
+#generate("0x9cda02b2a43f16f11c6860a8630672de9854d6f7")
